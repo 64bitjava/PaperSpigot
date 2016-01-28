@@ -1,0 +1,38 @@
+From fef43719c9a028c0ac222afa7e1ec771e56c9be4 Mon Sep 17 00:00:00 2001
+From: vemacs <d@nkmem.es>
+Date: Thu, 28 Jan 2016 12:13:33 -0700
+Subject: [PATCH] Add all-chunks-are-slime-chunks option to world configuration
+
+
+diff --git a/src/main/java/net/minecraft/server/EntitySlime.java b/src/main/java/net/minecraft/server/EntitySlime.java
+index d39df07..b97f209 100644
+--- a/src/main/java/net/minecraft/server/EntitySlime.java
++++ b/src/main/java/net/minecraft/server/EntitySlime.java
+@@ -234,7 +234,9 @@ public class EntitySlime extends EntityInsentient implements IMonster {
+                     return super.bR();
+                 }
+ 
+-                if (this.random.nextInt(10) == 0 && chunk.a(987234911L).nextInt(10) == 0 && this.locY < 40.0D) {
++                boolean isSlimeChunk = world.paperSpigotConfig.allChunksAreSlimeChunks
++                        || chunk.a(987234911L).nextInt(10) == 0;
++                if (this.random.nextInt(10) == 0 && isSlimeChunk && this.locY < 40.0D) {
+                     return super.bR();
+                 }
+             }
+diff --git a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java b/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
+index f5a8d49..343c8f5 100644
+--- a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
++++ b/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
+@@ -390,4 +390,9 @@ public class PaperSpigotWorldConfig
+     {
+         logDuplicateEntityUUIDs = getBoolean( "log-duplicate-entity-UUIDs", true );
+     }
++
++    public boolean allChunksAreSlimeChunks;
++    private void allChunksAreSlimeChunks() {
++        allChunksAreSlimeChunks = getBoolean( "all-chunks-are-slime-chunks", false );
++    }
+ }
+-- 
+2.6.1.windows.1
+
